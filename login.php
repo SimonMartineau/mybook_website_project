@@ -58,7 +58,7 @@
 
     </style>
 
-    <body style="font-family: tahoma; background-color: #e9ebee">
+    <body style="font-family: sans-serif; background-color: #e9ebee">
         <div id="bar">
             <div style="font-size:40px;">MyBook</div>
             <div id="signup_button">Sign up</div>
