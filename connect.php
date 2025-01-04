@@ -1,18 +1,57 @@
 <?php
 
-$host = "localhost";
-$username = "root";
-$password = "";
-$db = "mybook_db";
+class Database{
 
-$connection = mysqli_connect($host, $username, $password, $db);
+    // Database info
+    private $host = "localhost";
+    private $username = "root";
+    private $password = "";
+    private $db = "mybook_db";
 
-$first_name = "a";
-$last_name = "b";
-// Column names then variable names.
-$query = "insert into users (userid, first_name, last_name, gender, email, password, url_address) values (1, '$first_name', '$last_name', 'a', 'a', 'a', 'a')";
 
-// Sends query to database
-mysqli_query($connection, $query);
+    // Connects to db
+    function connect(){
+        $connection = mysqli_connect($this->host, $this->username, $this->password, $this->db);
+        return $connection;
+    }
 
+    // Reads data from db
+    function read($query){
+        $conn = $this->connect();
+        $result = mysqli_query($conn, $query); // return true or false if query worked or not
+
+        // If query fails, return false. Else, add collect data
+        if ($result == false){
+            return false;
+        } else{
+            $data = [];
+            while($row = mysqli_fetch_assoc($result)){
+                $data[] = $row; 
+            }
+
+        return $data;
+        }
+    }
+
+    // Saves data to db
+    function save($query){
+        $conn = $this->connect();
+        $result = mysqli_query($conn, $query); // return true or false if query worked or not
+
+        // If query fails, return false. Else, return true
+        if ($result == false){
+            return false;
+        } else{
+            return true;
+        }
+    }
+}
+
+$DB = new Database();
+
+$query = "select * from users";
+$data = $DB->read($query);
+echo "<pre>";
+print_r($data);
+echo "</pre>";
 ?>
