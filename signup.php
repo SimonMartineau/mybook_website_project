@@ -1,3 +1,20 @@
+<?php
+
+    include("classes/connect.php");
+    include("classes/signup.php");
+
+    // Check if user has submitted info
+    if ($_SERVER['REQUEST_METHOD'] == 'POST'){
+        $signup = new Signup();
+        $result = $signup->evaluate($_POST);
+
+        if($result != ""){
+            echo $result;
+        }
+    }
+?> 
+
+
 <html>
     <head>
 
@@ -66,17 +83,20 @@
 
         <div id="login_bar">
             Sign up to MyBook<br><br>
-            <input type="text" id="text" placeholder="First name"><br><br>
-            <input type="text" id="text" placeholder="Last name"><br><br>
-            <span style="font-weight: normal">Gender:</span><br>
-            <select name="" id="text">
-                <option value="Male">Male</option>
-                <option value="Female">Female</option>
-            </select><br><br>
-            <input type="text" id="text" placeholder="Email"><br><br>
-            <input type="password" id="text" placeholder="Password"><br><br>
-            <input type="password" id="text" placeholder="Retype-Password"><br><br>
-            <input type="submit" id="button" value="Sign up"><br><br><br>
+
+            <form method="post" action="signup.php">
+                <input name="first_name" type="text" id="text" placeholder="First name"><br><br>
+                <input name="last_name" type="text" id="text" placeholder="Last name"><br><br>
+                <span style="font-weight: normal">Gender:</span><br>
+                <select name="gender" id="text">
+                    <option value="Male">Male</option>
+                    <option value="Female">Female</option>
+                </select><br><br>
+                <input name="email" type="text" id="text" placeholder="Email"><br><br>
+                <input name="password" type="password" id="text" placeholder="Password"><br><br>
+                <input name="password_re" type="password" id="text" placeholder="Retype-Password"><br><br>
+                <input type="submit" id="button" value="Sign up"><br><br><br>
+            </form>
 
         </div>
         
