@@ -14,12 +14,20 @@
 
         if($result){
             // User is logged in. Retrieve user data
-            
+            $user = new User();
+            $user_data = $user->get_data($id);
+
+            // If we fail to get user data, redirect to login to try again
+            if(!$user_data){
+                header("Location: login.php");
+                die;
+            }
 
         } else{
             header("Location: login.php");
             die; // Doesn't load the rest of the page
         }
+
     }else{
         header("Location: login.php");
         die; // Doesn't load the rest of the page
@@ -142,7 +150,7 @@
                 <img src="social_images/mountain.jpg" style="width:100%">
                 <img src="social_images/user1.jpg" id="profile_pic">
                 <br>
-                <div style="font-size: 20px">Tom Bandar</div>
+                <div style="font-size: 20px"><?php echo $user_data['first_name'] . " " . $user_data['last_name']?></div>
                 <br>
                 <div id="menu_buttons">Timeline</div>
                 <div id="menu_buttons">About</div>
