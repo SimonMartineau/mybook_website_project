@@ -1,3 +1,44 @@
+<?php
+
+session_start(); // Important to use _SESSION variable
+
+    include("classes/connect.php");
+    include("classes/login.php");
+
+    // Variables to keep user input data if failed submit
+    $email = "";
+    $password = "";
+
+
+    // Check if user has submitted info
+    if ($_SERVER['REQUEST_METHOD'] == 'POST'){
+        $login = new Login();
+        $errors = $login->evaluate($_POST);
+
+        // If there are errors 
+        if($errors != ""){
+            echo "<div style='text-align:center; font-size:12px; color:white; background-color:grey;'> ";
+            echo "The following errors occured:<br><br>";
+            echo $errors;
+            echo "</div>";
+
+            // Re-enter user input data in prompts
+            $email = $_POST['email'];
+            $password = $_POST['password'];
+
+        }
+        else{
+            // Reset the user input variables.
+            $email = "";
+            $password = "";
+
+            // Changing the page.
+            header("Location: profile.php");
+            die; // Ending the script
+        }    
+    }
+?> 
+
 <html>
     <head>
 
@@ -66,12 +107,14 @@
 
         <div id="login_bar">
 
-            Log in to MyBook<br><br>
+            <form method="post">
+                Log in to MyBook<br><br>
 
-            <input type="text" id="text" placeholder="Email"><br><br>
-            <input type="password" id="text" placeholder="Password"><br><br>
-            <input type="submit" id="button" value="Log in"><br><br><br>
+                <input name="email" value="<?php $email?>" type="text" id="text" placeholder="Email"><br><br>
+                <input name="password" value="<?php $password?>" type="password" id="text" placeholder="Password"><br><br>
+                <input type="submit" id="button" value="Log in"><br><br><br>
 
+            </form>
         </div>
         
     </body>
