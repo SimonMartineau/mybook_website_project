@@ -1,7 +1,7 @@
 <?php
 
     session_start();
-    //print_r($_SESSION);
+    //print_r(value: $_SESSION);
     include("classes/connect.php");
     include("classes/login.php");
     include("classes/user.php");
@@ -141,6 +141,9 @@
                 MyBook &nbsp &nbsp
                 <input type="text" id="search_box" placeholder="Search for people">
                 <img src="social_images/user1.jpg" style="width: 50px; float:right;">
+                <a href="logout.php">
+                    <span style="color: white; font-size:11px; float: right; margin: 10px;">Logout</span>
+                </a>
             </div>
         </div>
 
