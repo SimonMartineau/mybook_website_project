@@ -1,46 +1,40 @@
 <?php
 
     session_start();
-    //print_r(value: $_SESSION);
     include("classes/connect.php");
     include("classes/login.php");
     include("classes/user.php");
     include("classes/post.php");
 
-    // Check if user is logged in
-    if(isset($_SESSION['mybook_userid']) && is_numeric($_SESSION['mybook_userid'])){
-        $id = $_SESSION['mybook_userid'];
-        $login = new Login();
-        $result = $login->check_login($id);
-
-        if($result){
-            // User is logged in. Retrieve user data
-            $user = new User();
-            $user_data = $user->get_data($id);
-
-            // If we fail to get user data, redirect to login to try again
-            if(!$user_data){
-                header("Location: login.php");
-                die;
-            }
-
-        } else{
-            header("Location: login.php");
-            die; // Doesn't load the rest of the page
-        }
-
-    }else{
-        header("Location: login.php");
-        die; // Doesn't load the rest of the page
-    }
+    $id = $_SESSION['mybook_userid'];
+    $login = new Login();
+    $user_data = $login->check_login($id);
 
     // Posting starts here
     if($_SERVER['REQUEST_METHOD'] == "POST"){
         $post = new Post();
-        $id = $_SESSION['mybook_userid'];
         $result = $post->create_post($id, $_POST);
 
+        if($result == ""){
+            header("Location: profile.php");
+            die;
+        } else{
+            echo "<div style='text-align:center; font-size:12px; color:white; background-color:grey;'> ";
+            echo "The following errors occured:<br><br>";
+            echo $errors;
+            echo "</div>";
+        }
     }
+
+    // Collect posts
+    $post = new Post();
+    $posts = $post->get_post($id);
+
+    // Collect friends
+    $user = new User();
+    $friends = $user->get_friends($id);
+
+    
 
 
 ?>
@@ -145,17 +139,7 @@
     <body style="font-family: sans-serif ; background-color: #d0d8e4;">
 
         <!-- Top bar -->
-        <br>
-        <div id="blue_bar">
-            <div style="width: 800px; margin: auto; font-size: 30px;">
-                MyBook &nbsp &nbsp
-                <input type="text" id="search_box" placeholder="Search for people">
-                <img src="social_images/user1.jpg" style="width: 50px; float:right;">
-                <a href="logout.php">
-                    <span style="color: white; font-size:11px; float: right; margin: 10px;">Logout</span>
-                </a>
-            </div>
-        </div>
+        <?php include("header.php"); ?>
 
         <!-- Cover area -->
         <div style="width: 800px; min-height: 400px; margin:auto;">
@@ -165,7 +149,7 @@
                 <br>
                 <div style="font-size: 20px"><?php echo $user_data['first_name'] . " " . $user_data['last_name']?></div>
                 <br>
-                <div id="menu_buttons">Timeline</div>
+                <a href="index.php"><div id="menu_buttons">Timeline</div></a>
                 <div id="menu_buttons">About</div>
                 <div id="menu_buttons">Friends</div>
                 <div id="menu_buttons">Photos</div>
@@ -181,29 +165,14 @@
                     <div id="friends_bar">
                         Friends <br>
 
-                        <div id="friends">
-                            <img id="friends_img" src="social_images/selfie.jpg">
-                            <br>
-                            First User
-                        </div>
+                        <?php
+                            if($friends){
+                                foreach($friends as $FRIEND_ROW){
+                                    include("user.php");
+                                }
+                            }
+                        ?>
 
-                        <div id="friends">
-                            <img id="friends_img" src="social_images/user2.jpg">
-                            <br>
-                            Second User
-                        </div>
-
-                        <div id="friends">
-                            <img id="friends_img" src="social_images/user3.jpg">
-                            <br>
-                            Third User
-                        </div>
-
-                        <div id="friends">
-                            <img id="friends_img" src="social_images/user4.jpg">
-                            <br>
-                            Forth User
-                        </div>
                     </div>
                 </div>
 
@@ -219,52 +188,18 @@
                         </form>
                     </div>
 
-                    <!-- Posts -->
+                    <!-- Displaying posts -->
                     <div id="post_bar">
 
-                        <!-- Post 1 -->
-                        <div id="post">
-                            <div>
-                                <img src="social_images/user3.jpg" style="width: 75px; margin-right: 4px;">
-                            </div>
-                            <div>
-                                <div style="font-weight: bold; color: #405d9b">Third User</div>
-                            Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum.
-                            <br><br>
-                            <a href="">Like</a> . <a href="">Comment</a> . <span style="color: #999">April 23 2020</span> <!-- Span keeps the element in the same line-->
-                        
-                            </div>
-                        </div>
-
-                        <!-- Post 2 -->
-                        <div id="post">
-                            <div>
-                                <img src="social_images/selfie.jpg" style="width: 75px; margin-right: 4px;">
-                            </div>
-                            <div>
-                                <div style="font-weight: bold; color: #405d9b">First User</div>
-                            Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum.
-                            <br><br>
-                            <a href="">Like</a> . <a href="">Comment</a> . <span style="color: #999">April 23 2020</span> <!-- Span keeps the element in the same line-->
-                        
-                            </div>
-                        </div>
-
-                        <!-- Post 3 -->
-                        <div id="post">
-                            <div>
-                                <img src="social_images/user2.jpg" style="width: 75px; margin-right: 4px;">
-                            </div>
-                            <div>
-                                <div style="font-weight: bold; color: #405d9b">Second User</div>
-                            Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum.
-                            <br><br>
-                            <a href="">Like</a> . <a href="">Comment</a> . <span style="color: #999">April 23 2020</span> <!-- Span keeps the element in the same line-->
-                        
-                            </div>
-                        </div>
-
-
+                        <?php
+                            if($posts){
+                                foreach($posts as $POST_ROW){
+                                    $user = new User();
+                                    $ROW_USER = $user->get_user($POST_ROW['userid']); // important user data
+                                    include("post.php");
+                                }
+                            }
+                        ?>
 
                     </div>
 

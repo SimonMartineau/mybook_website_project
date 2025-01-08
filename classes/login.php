@@ -32,19 +32,24 @@ class Login{
     }
 
     public function check_login($id){
-        $query = "select userid from users where userid = '$id' limit 1";
-                
-        // Send data to db
-        $DB = new Database();
-        $result = $DB->read($query);
+        if(is_numeric($id)){
 
-        if ($result){
-            return true; // The user was found
+            $query = "select * from users where userid = '$id' limit 1";
+                    
+            // Send data to db
+            $DB = new Database();
+            $result = $DB->read($query);
+
+            if($result){
+                $user_data = $result[0];
+                return $user_data; // The user was found
+            } else{
+                header("Location: login.php");
+                die; // Doesn't load the rest of the page
+            }
+        } else{  // Check if user is logged in
+            header("Location: login.php");
+            die;
         }
-
-        return false; // The user was not found
-
-
     }
 }
-?>

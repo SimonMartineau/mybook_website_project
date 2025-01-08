@@ -1,3 +1,17 @@
+<?php
+    session_start();
+    include("classes/connect.php");
+    include("classes/login.php");
+    include("classes/user.php");
+    include("classes/post.php");
+
+    $id = $_SESSION['mybook_userid'];
+    $login = new Login();
+    $user_data = $login->check_login($id);
+?>
+
+
+
 <!DOCTYPE html>
 <html lang="en">
     <head>
@@ -98,14 +112,7 @@
     <body style="font-family: sans-serif ; background-color: #d0d8e4;">
 
         <!-- Top bar -->
-        <br>
-        <div id="blue_bar">
-            <div style="width: 800px; margin: auto; font-size: 30px;">
-                MyBook &nbsp &nbsp
-                <input type="text" id="search_box" placeholder="Search for people">
-                <img src="social_images/user1.jpg" style="width: 50px; float:right;">
-            </div>
-        </div>
+        <?php include("header.php"); ?>
 
         <!-- Cover area -->
         <div style="width: 800px; min-height: 400px; margin:auto;">
@@ -118,7 +125,9 @@
 
                     <div id="friends_bar">
                         <img src="social_images/user1.jpg" id="profile_pic"><br>
-                        Tom Banda
+                        <a href="profile.php" style="text-decoration: none">
+                            <?php echo $user_data['first_name'] . " " . $user_data['last_name'] ?>
+                        </a>
                     </div>
                 </div>
 

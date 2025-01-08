@@ -102,7 +102,7 @@ session_start(); // Important to use _SESSION variable
     <body style="font-family: sans-serif; background-color: #e9ebee">
         <div id="bar">
             <div style="font-size:40px;">MyBook</div>
-            <div id="signup_button">Sign up</div>
+            <a href="signup.php"><div id="signup_button">Sign up</div></a>
         </div>
 
         <div id="login_bar">
